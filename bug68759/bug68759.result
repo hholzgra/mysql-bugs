@@ -1,0 +1,37 @@
+DROP TABLE IF EXISTS t_my;
+DROP TABLE IF EXISTS t_in;
+DROP TABLE IF EXISTS t_inno;
+CREATE TABLE t_my (pk INT PRIMARY KEY, t TIME, KEY(t)) ENGINE=MyISAM;
+INSERT INTO t_my VALUES (1,'00:00:00'),(2, '23:59:59');
+SELECT DISTINCT pk FROM t_my WHERE t < 'time';
+pk
+1
+2
+CREATE TABLE t_in (pk INT PRIMARY KEY, t TIME, KEY(t)) ENGINE=InnoDB;
+INSERT INTO t_in VALUES (1,'00:00:00'),(2, '23:59:59');
+SELECT DISTINCT pk FROM t_in WHERE t < 'time';
+pk
+1
+2
+CREATE TABLE t_inno (pk INT PRIMARY KEY, t_key TIME, t TIME, KEY(t_key)) ENGINE=InnoDB;
+INSERT INTO t_inno VALUES (1,'12:12:12','12:12:12'),(2,'21:21:21','21:21:21');
+SELECT * FROM t_inno WHERE t < 'z';
+pk	t_key	t
+1	12:12:12	12:12:12
+2	21:21:21	21:21:21
+SELECT * FROM t_inno WHERE t < 'z';
+pk	t_key	t
+1	12:12:12	12:12:12
+2	21:21:21	21:21:21
+SELECT pk FROM t_inno WHERE t_key < 'z';
+pk
+1
+2
+SELECT * FROM t_inno WHERE t_key < 'z';
+pk	t_key	t
+1	12:12:12	12:12:12
+2	21:21:21	21:21:21
+SELECT * FROM t_inno IGNORE KEY (t_key) WHERE t_key < 'z';
+pk	t_key	t
+1	12:12:12	12:12:12
+2	21:21:21	21:21:21

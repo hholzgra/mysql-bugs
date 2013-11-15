@@ -1,0 +1,17 @@
+# MySQL Bugs: #70359
+# Wrong result (missing rows) with group by, multi-part key, equality conditions
+# http://bugs.mysql.com/bug.php?id=70359
+
+--disable_warnings
+DROP TABLE IF EXISTS t1;
+--enable_warnings
+
+CREATE TABLE t1 (a INT, b VARCHAR(1), INDEX `foo`(b,a)) ENGINE=MyISAM;
+
+INSERT INTO t1 VALUES (2,'s'),(5,'h'),(3,'q'),(1,'a'),(3,'v'),
+(6,'u'),(7,'s'),(5,'y'),(1,'z'),(5,'i'),(2,'y');
+
+SELECT b, max(a) FROM t1 WHERE b = 'i' OR a = 2 GROUP BY b;
+
+SELECT b, max(a) FROM t1 IGNORE INDEX (foo) WHERE b = 'i' OR a = 2 GROUP BY b;
+

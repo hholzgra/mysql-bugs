@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS t1;
+CREATE TABLE `t1` (
+`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+`data` text DEFAULT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `t1` (`data`) VALUES (null);
+SELECT DATE_ADD('2013-04-03 12:00:00', INTERVAL null SECOND) AS `duration`;
+duration
+NULL
+SELECT DATE_ADD('2013-04-03 12:00:00', INTERVAL `t1`.`data` SECOND) AS `duration` FROM `t1`;
+duration
+NULL

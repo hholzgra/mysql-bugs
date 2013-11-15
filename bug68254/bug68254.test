@@ -1,0 +1,62 @@
+# MySQL Bugs: #68254
+# subquery optimize to wrong semi-join with extensions syntax to group by
+# http://bugs.mysql.com/bug.php?id=68254
+
+--disable_warnings
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
+--enable_warnings
+
+CREATE TABLE `t1` (
+  `t1_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `type` INT(10) UNSIGNED NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ 
+CREATE TABLE `t2` (
+  `t2_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `t1_id` INT(10) UNSIGNED NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ 
+ 
+INSERT INTO t1 SET type=0;
+INSERT INTO t1 SET type=1;
+INSERT INTO t1 SET type=1;
+INSERT INTO t1 SET type=1;
+ 
+INSERT INTO t2 SET t1_id=1;
+INSERT INTO t2 SET t1_id=1;
+INSERT INTO t2 SET t1_id=1;
+INSERT INTO t2 SET t1_id=1;
+INSERT INTO t2 SET t1_id=1;
+INSERT INTO t2 SET t1_id=1;
+ 
+INSERT INTO t2 SET t1_id=2;
+INSERT INTO t2 SET t1_id=2;
+INSERT INTO t2 SET t1_id=2;
+INSERT INTO t2 SET t1_id=2;
+INSERT INTO t2 SET t1_id=2;
+INSERT INTO t2 SET t1_id=2;
+ 
+INSERT INTO t2 SET t1_id=3;
+INSERT INTO t2 SET t1_id=3;
+INSERT INTO t2 SET t1_id=3;
+INSERT INTO t2 SET t1_id=3;
+INSERT INTO t2 SET t1_id=3;
+INSERT INTO t2 SET t1_id=3;
+ 
+INSERT INTO t2 SET t1_id=4;
+INSERT INTO t2 SET t1_id=4;
+INSERT INTO t2 SET t1_id=4;
+INSERT INTO t2 SET t1_id=4;
+INSERT INTO t2 SET t1_id=4;
+INSERT INTO t2 SET t1_id=4;
+COMMIT;
+
+SELECT t1_id from t1 group by type;
+SELECT min(t1_id) from t1 group by type;
+
+SELECT t2_id, t1_id FROM t2 WHERE t2.t1_id IN (1,2);
+
+SELECT t2_id, t1_id FROM t2 WHERE t2.t1_id IN (SELECT t1_id FROM t1 GROUP BY type);
+SELECT t2_id, t1_id FROM t2 WHERE t2.t1_id IN (SELECT min(t1_id) FROM t1 GROUP BY type);
+
