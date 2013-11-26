@@ -1,0 +1,12 @@
+# MySQL Bugs: #37871
+# ALTER TABLE ENGINE=ARCHIVE fails on tables with auto_increment field
+# http://bugs.mysql.com/bug.php?id=37871
+
+--disable_warnings
+DROP TABLE IF EXISTS t1;
+--enable_warnings
+
+CREATE TABLE t1(id INT PRIMARY KEY AUTO_INCREMENT) ENGINE=myisam;
+INSERT INTO t1 VALUES(1);
+--disable_abort_on_error
+ALTER TABLE t1 ENGINE=archive;
