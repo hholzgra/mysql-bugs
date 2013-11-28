@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS t1;
+DROP TABLE IF EXISTS t2;
+create table t1(id int primary key);
+insert into t1 values(1),(2),(3);
+create table t2 (id int primary key, flag bool);
+insert into t2 values(1, true),(2,false);
+select * from t1 natural left join t2 where flag != true;
+id	flag
+2	0
+select * from t1 natural left join t2 where flag is not true;
+id	flag
+2	0
+3	NULL
