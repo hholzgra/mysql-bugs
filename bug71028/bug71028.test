@@ -1,0 +1,22 @@
+# MySQL Bugs: #71028
+# error result when "count + distinct + case when" need merge_walk
+# http://bugs.mysql.com/bug.php?id=71028
+
+--disable_warnings
+DROP TABLE IF EXISTS t1;
+--enable_warnings
+
+set tmp_table_size=1024;
+create table t1(id int auto_increment primary key, v varchar(32))engine=myisam charset=gbk;
+insert into t1(v) values("aaa");
+insert into t1(v) (select v from t1);
+insert into t1(v) (select v from t1);
+insert into t1(v) (select v from t1);
+insert into t1(v) (select v from t1);
+insert into t1(v) (select v from t1);
+insert into t1(v) (select v from t1);
+
+update t1 set v=concat(v, id);
+select count(distinct case when id<=64 then id end) from t1;
+select count(distinct case when id<=63 then id end) from t1;
+
