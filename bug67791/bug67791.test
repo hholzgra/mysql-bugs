@@ -1,0 +1,19 @@
+# MySQL Bugs: #67791
+# Create View succeeds, but adds invalid parentheses
+# http://bugs.mysql.com/bug.php?id=67791
+
+--disable_warnings
+drop table if exists interval_test;
+--enable_warnings
+
+create table interval_test (c1 int);
+
+insert into interval_test(c1) values(null),(1),(2),(10),(100);
+
+select interval(greatest(0, c1), 0,1,2,3,20) bucket from interval_test;
+
+create or replace view interval_test_view as
+select interval(greatest(0, c1), 0,1,2,3,20) bucket from interval_test;
+
+--disable_abort_on_error
+select * from interval_test_view;

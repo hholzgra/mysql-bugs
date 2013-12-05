@@ -1,0 +1,19 @@
+drop table if exists interval_test;
+create table interval_test (c1 int);
+insert into interval_test(c1) values(null),(1),(2),(10),(100);
+select interval(greatest(0, c1), 0,1,2,3,20) bucket from interval_test;
+bucket
+-1
+2
+3
+4
+5
+create or replace view interval_test_view as
+select interval(greatest(0, c1), 0,1,2,3,20) bucket from interval_test;
+select * from interval_test_view;
+bucket
+-1
+2
+3
+4
+5
