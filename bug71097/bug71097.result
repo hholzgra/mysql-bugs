@@ -1,0 +1,23 @@
+DROP TABLE IF EXISTS ti;
+CREATE TABLE ti (
+`id` int(10) unsigned NOT NULL,
+`ns_id` int(10) unsigned NOT NULL DEFAULT '0',
+PRIMARY KEY (`ns_id`,`id`)
+) engine=MyISAM;
+insert into ti values(1,1), (2,2), (1042000,501087), (5435626,504005);
+select ns_id, id from ti where (ns_id = 501087 and id = 1042000)
+or (ns_id = 504005 and id = 5435626) group by ns_id;
+ns_id	id
+501087	1042000
+504005	5435626
+select ns_id, max(id) from ti where (ns_id = 501087 and id = 1042000)
+or (ns_id = 504005 and id = 5435626) group by ns_id;
+ns_id	max(id)
+501087	1042000
+504005	5435626
+select ns_id, max(id) from ti group by ns_id;
+ns_id	max(id)
+1	1
+2	2
+501087	1042000
+504005	5435626
