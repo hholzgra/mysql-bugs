@@ -1,27 +1,15 @@
 A small, but hopefully growing collection of MySQL bug test cases
 
-Workflow
-========
+Now using mysql_test_run conventions with tests in ./t and expected
+results in ./r
 
-* ./bug.sh $$$$$
+Naming convention for tests is $prefix-$number where prefix refers
+to the bug tracker and number to the bug number on the tracker site.
 
-Will create a new test case directory from the default template,
-and will open the bug$$$$$.test template in your favorite $EDITOR
+Currently there are only mysql-$number test cases which all refer
+to bugs.mysql.com, but for the future I plan to have:
 
-Then inside the newly created bug$$$$$ subdir:
+* "mysql-" for bugs.mysql.com
+* "lp-"    for bugs reported on launchpad (for all of mysql, mariadb, percona)
+* "maria-" for MariaDB bug reports on https://mariadb.atlassian.net/
 
-* make record
-
-Runs your bug$$$$$.test and records the results in bug$$$$$.result
-
-If the actual results are wrong you can now edit the .result file
-to match the actually expected result.
-
-* make test
-
-Run your bug$$$$$.test and compare the result against the expected
-outcome recorded in the .result file
-
-* make dist 
-
-Wrap test case and results up into a tar.gz archive for easy submission
